@@ -14,6 +14,16 @@ rough sketch:
 10. source code performs rolling updates to github while other machines perform rolling downloads
 
 ```bash
-# example parallel and series console.logs
-$ gulp --gulpfile=./tasks/log.js
+# node index.js --help
+Usage: network-ai [options] [command]
+
+CLI to network-ai functionality.
+
+Options:
+  -V, --version   output the version number
+  -h, --help      display help for command
+
+Commands:
+  tasks <string>  Run a gulp task from the tasks folder.
+  help [command]  display help for command
 ```
