@@ -3,6 +3,7 @@ import yargs from 'yargs/yargs'
 import { hideBin } from 'yargs/helpers'
 const argv = yargs(hideBin(process.argv)).argv
 
+// workflow
 import gulp from 'gulp';
 const { series, parallel } = gulp;
 
@@ -11,35 +12,60 @@ import { containerBootstrap } from '@nlpjs/core'
 import { Nlp } from '@nlpjs/nlp'
 import { LangEn } from '@nlpjs/lang-en-min'
 
-async function addDocument () {
-  console.log('cool')
-  console.log('adding document', argv.container)
+// database
+import { writeFile, load } from '../lib/database.js'
+
+// database collection
+import loki from 'lokijs'
+let db = new loki('istrav');
+let documents = db.addCollection('documents', { indices: ['language', 'utterance', 'intent'] });
+let answers = db.addCollection('answers', { indices: ['language', 'intent', 'response'] });
+
+// complete
+async function saveTraining (name, data) {
+  let key = `nlp/trainings/${name}`
+  console.log('save training ', key)
+  await writeFile(key, data)
+}
+
+// perform
+async function train () {
+  // configuration
+  let containerName = argv.container
+  let containerLanguage = argv.language
+  console.log('train ', containerName, containerLanguage)
+
+  // setup nlp
   const container = await containerBootstrap();
   container.use(Nlp);
   container.use(LangEn);
   const nlp = container.get('nlp');
   nlp.settings.autoSave = false;
   nlp.addLanguage('en');
-  // Adds the utterances and intents for the NLP
-  nlp.addDocument('en', 'goodbye for now', 'greetings.bye');
-  nlp.addDocument('en', 'bye bye take care', 'greetings.bye');
-  nlp.addDocument('en', 'okay see you later', 'greetings.bye');
-  nlp.addDocument('en', 'bye for now', 'greetings.bye');
-  nlp.addDocument('en', 'i must go', 'greetings.bye');
-  nlp.addDocument('en', 'hello', 'greetings.hello');
-  nlp.addDocument('en', 'hi', 'greetings.hello');
-  nlp.addDocument('en', 'howdy', 'greetings.hello');
-  
-  // Train also the NLG
-  nlp.addAnswer('en', 'greetings.bye', 'Till next time');
-  nlp.addAnswer('en', 'greetings.bye', 'see you soon!');
-  nlp.addAnswer('en', 'greetings.hello', 'Hey there!');
-  nlp.addAnswer('en', 'greetings.hello', 'Greetings!');
+
+  // present documents to nlp
+  await load(containerName, documents)
+  let documentData = documents.find()
+  documentData.forEach((value) => {
+    nlp.addDocument(value.language, value.utterance, value.intent);
+  })
+
+  // present answers to nlp
+  await load(containerName, answers)
+  let answerData = documents.find()
+  answerData.forEach((value) => {
+    nlp.addAnswer(value.language, value.intent, value.response);
+  })
+
+  // start training
   await nlp.train();
-  const response = await nlp.process('en', 'I should go now');
-  console.log(response);
+  
+  // finish training
+  let result = nlp.toJSON()
+  await saveTraining(containerName, result)
 }
 
+// tasks
 export default series(
-  addDocument
+  train
 )

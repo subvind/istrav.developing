@@ -15,17 +15,29 @@ let collection = db.addCollection('documents', { indices: ['language', 'utteranc
 // perform
 import { load, save } from '../lib/database.js'
 async function addDocument () {
-  let key = `nlp/documents/${argv.container}`
+  // configuration
+  let containerName = argv.container
+  let containerLanguage = argv.language
+  let containerUtterance = argv.utterance
+  let containerIntent = argv.intent
+  console.log('add document ', containerName, containerLanguage, containerUtterance, containerIntent)
+
+  // setup
+  let key = `nlp/documents/${containerName}`
   await load(key, collection)
+  console.log('setup', key)
+
+  // record
   let value = {
-    language: argv.container,
-    utterance: argv.utterance,
-    intent: argv.intent
+    language: containerLanguage,
+    utterance: containerUtterance,
+    intent: containerIntent
   }
-  console.log('inserting: ', value)
+  console.log('record: ', value)
 
   // do not create duplicate records
   if (!collection.findOne(value)) {
+    // transaction
     collection.insert(value)
     await save(key, collection)
   } else {

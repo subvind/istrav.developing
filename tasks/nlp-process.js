@@ -3,6 +3,7 @@ import yargs from 'yargs/yargs'
 import { hideBin } from 'yargs/helpers'
 const argv = yargs(hideBin(process.argv)).argv
 
+// workflow
 import gulp from 'gulp';
 const { series, parallel } = gulp;
 
@@ -11,35 +12,43 @@ import { containerBootstrap } from '@nlpjs/core'
 import { Nlp } from '@nlpjs/nlp'
 import { LangEn } from '@nlpjs/lang-en-min'
 
-async function addDocument () {
-  console.log('cool')
-  console.log('adding document', argv.container)
+// database
+import { readOrCreateFile } from '../lib/database.js'
+
+// init
+let data
+async function loadTraining (name) {
+  let key = `nlp/trainings/${name}`
+  console.log('load training ', key)
+  data = await readOrCreateFile(key)
+  await nlp.fromJSON(data)
+}
+
+// perform
+async function processData () {
+  // configuration
+  let containerName = argv.container
+  let containerLanguage = argv.language
+  let containerRun = argv.run
+  console.log('process data ', containerName, containerRun)
+
+  // setup nlp
   const container = await containerBootstrap();
   container.use(Nlp);
   container.use(LangEn);
   const nlp = container.get('nlp');
   nlp.settings.autoSave = false;
   nlp.addLanguage('en');
-  // Adds the utterances and intents for the NLP
-  nlp.addDocument('en', 'goodbye for now', 'greetings.bye');
-  nlp.addDocument('en', 'bye bye take care', 'greetings.bye');
-  nlp.addDocument('en', 'okay see you later', 'greetings.bye');
-  nlp.addDocument('en', 'bye for now', 'greetings.bye');
-  nlp.addDocument('en', 'i must go', 'greetings.bye');
-  nlp.addDocument('en', 'hello', 'greetings.hello');
-  nlp.addDocument('en', 'hi', 'greetings.hello');
-  nlp.addDocument('en', 'howdy', 'greetings.hello');
+
+  // setup training
+  await loadTraining(containerName)
   
-  // Train
-  nlp.addAnswer('en', 'greetings.bye', 'Till next time');
-  nlp.addAnswer('en', 'greetings.bye', 'see you soon!');
-  nlp.addAnswer('en', 'greetings.hello', 'Hey there!');
-  nlp.addAnswer('en', 'greetings.hello', 'Greetings!');
-  await nlp.train();
-  const response = await nlp.process('en', 'I should go now');
+  // process
+  const response = await nlp.process(containerLanguage, containerRun);
   console.log(response);
 }
 
+// tasks
 export default series(
-  addDocument
+  processData
 )
