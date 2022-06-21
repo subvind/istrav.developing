@@ -20,7 +20,7 @@ async function addDocument () {
   let containerLanguage = argv.language
   let containerUtterance = argv.utterance
   let containerIntent = argv.intent
-  console.log('add document ', containerName, containerLanguage, containerUtterance, containerIntent)
+  console.log('add document', containerName, containerLanguage, `"${containerUtterance}"`, containerIntent)
 
   // setup
   let key = `nlp/documents/${containerName}`
@@ -40,6 +40,7 @@ async function addDocument () {
     // transaction
     collection.insert(value)
     await save(key, collection)
+    console.log('The collection has been updated with the latest record and saved.')
   } else {
     console.log('No need to insert document because it already exists.')
   }

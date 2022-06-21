@@ -19,7 +19,7 @@ import { readOrCreateFile } from '../lib/database.js'
 let data
 async function loadTraining (name) {
   let key = `nlp/trainings/${name}`
-  console.log('load training ', key)
+  console.log('load training', key)
   data = await readOrCreateFile(key)
   await nlp.fromJSON(data)
 }
@@ -30,7 +30,7 @@ async function processData () {
   let containerName = argv.container
   let containerLanguage = argv.language
   let containerRun = argv.run
-  console.log('process data ', containerName, containerRun)
+  console.log('process data', containerName, containerRun)
 
   // setup nlp
   const container = await containerBootstrap();
@@ -38,7 +38,7 @@ async function processData () {
   container.use(LangEn);
   const nlp = container.get('nlp');
   nlp.settings.autoSave = false;
-  nlp.addLanguage('en');
+  nlp.addLanguage(containerLanguage);
 
   // setup training
   await loadTraining(containerName)

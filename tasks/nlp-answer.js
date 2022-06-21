@@ -20,7 +20,7 @@ async function addAnswer () {
   let containerLanguage = argv.language
   let containerIntent = argv.intent
   let containerResponse = argv.response
-  console.log('add answer ', containerName, containerLanguage, containerIntent, containerResponse)
+  console.log('add answer', containerName, containerLanguage, containerIntent, `"${containerResponse}"`)
 
   // setup
   let key = `nlp/answers/${argv.container}`
@@ -32,13 +32,14 @@ async function addAnswer () {
     intent: containerIntent,
     response: containerResponse,
   }
-  console.log('record: ', value)
+  console.log('record:', value)
 
   // do not create duplicate records
   if (!collection.findOne(value)) {
     // transaction
     collection.insert(value)
     await save(key, collection)
+    console.log('The collection has been updated with the latest record and saved.')
   } else {
     console.log('No need to insert answer because it already exists.')
   }

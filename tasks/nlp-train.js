@@ -24,7 +24,7 @@ let answers = db.addCollection('answers', { indices: ['language', 'intent', 'res
 // complete
 async function saveTraining (name, data) {
   let key = `nlp/trainings/${name}`
-  console.log('save training ', key)
+  console.log('save training', key)
   await writeFile(key, data)
 }
 
@@ -33,7 +33,7 @@ async function train () {
   // configuration
   let containerName = argv.container
   let containerLanguage = argv.language
-  console.log('train ', containerName, containerLanguage)
+  console.log('train', containerName, containerLanguage)
 
   // setup nlp
   const container = await containerBootstrap();
@@ -41,18 +41,20 @@ async function train () {
   container.use(LangEn);
   const nlp = container.get('nlp');
   nlp.settings.autoSave = false;
-  nlp.addLanguage('en');
+  nlp.addLanguage(containerLanguage);
 
   // present documents to nlp
-  await load(containerName, documents)
+  let documentsKey = `nlp/documents/${containerName}`
+  await load(documentsKey, documents)
   let documentData = documents.find()
   documentData.forEach((value) => {
     nlp.addDocument(value.language, value.utterance, value.intent);
   })
 
   // present answers to nlp
-  await load(containerName, answers)
-  let answerData = documents.find()
+  let answersKey = `nlp/answers/${containerName}`
+  await load(answersKey, answers)
+  let answerData = answers.find()
   answerData.forEach((value) => {
     nlp.addAnswer(value.language, value.intent, value.response);
   })
@@ -62,7 +64,7 @@ async function train () {
   
   // finish training
   let result = nlp.toJSON()
-  await saveTraining(containerName, result)
+  await saveTraining(containerName, JSON.stringify(result))
 }
 
 // tasks

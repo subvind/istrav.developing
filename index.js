@@ -24,7 +24,7 @@ program.command('tasks')
 program.command('nlp-document')
   .description('Add an utterance and intent for the NLP.')
   .argument('<container>', 'data silo')
-  .argument('<language>', 'the language of the utterance')
+  .argument('<language>', 'the language to use')
   .argument('<utterance>', 'what is being said')
   .argument('<intent>', 'purpose of utterance')
   .action((container, language, utterance, intent, options) => {
@@ -41,11 +41,26 @@ program.command('nlp-document')
 program.command('nlp-answer')
   .description('Add an intent and response for the NLP.')
   .argument('<container>', 'data silo')
-  .argument('<language>', 'the language of the response')
+  .argument('<language>', 'the language to use')
   .argument('<intent>', 'match purpose')
   .argument('<response>', 'what to say')
   .action((container, language, intent, response, options) => {
     let cmd = cp.exec(`gulp --gulpfile=./tasks/nlp-answer.js --container="${container}"  --language="${language}"  --intent="${intent}"  --response="${response}"`)
+
+    cmd.stdout.on('data', (data) => {
+      console.log(data.toString());
+    });
+    cmd.stderr.on('data', (data) => {
+      console.log(data.toString());
+    });
+  });
+
+program.command('nlp-train')
+  .description('Teach program how to act using answers and documents.')
+  .argument('<container>', 'data silo')
+  .argument('<language>', 'the language to use')
+  .action((container, language, options) => {
+    let cmd = cp.exec(`gulp --gulpfile=./tasks/nlp-train.js --container="${container}"  --language="${language}"`)
 
     cmd.stdout.on('data', (data) => {
       console.log(data.toString());
