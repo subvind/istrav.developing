@@ -16,12 +16,10 @@ import { LangEn } from '@nlpjs/lang-en-min'
 import { readOrCreateFile } from '../lib/database.js'
 
 // init
-let data
 async function loadTraining (name) {
   let key = `nlp/trainings/${name}`
-  console.log('load training', key)
-  data = await readOrCreateFile(key)
-  await nlp.fromJSON(data)
+  console.log('load training from', key)
+  return await readOrCreateFile(key)
 }
 
 // perform
@@ -30,7 +28,7 @@ async function processData () {
   let containerName = argv.container
   let containerLanguage = argv.language
   let containerRun = argv.run
-  console.log('process data', containerName, containerRun)
+  console.log('process data', containerName, `"${containerRun}"`)
 
   // setup nlp
   const container = await containerBootstrap();
@@ -41,11 +39,13 @@ async function processData () {
   nlp.addLanguage(containerLanguage);
 
   // setup training
-  await loadTraining(containerName)
+  let data = await loadTraining(containerName)
+  // console.log('setup training', data)
+  await nlp.fromJSON(JSON.parse(data))
   
   // process
   const response = await nlp.process(containerLanguage, containerRun);
-  console.log(response);
+  console.log(response.answer);
 }
 
 // tasks

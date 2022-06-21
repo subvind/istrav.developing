@@ -56,11 +56,27 @@ program.command('nlp-answer')
   });
 
 program.command('nlp-train')
-  .description('Teach program how to act using answers and documents.')
+  .description('Teach a program how to act using documents and answers.')
   .argument('<container>', 'data silo')
   .argument('<language>', 'the language to use')
   .action((container, language, options) => {
     let cmd = cp.exec(`gulp --gulpfile=./tasks/nlp-train.js --container="${container}"  --language="${language}"`)
+
+    cmd.stdout.on('data', (data) => {
+      console.log(data.toString());
+    });
+    cmd.stderr.on('data', (data) => {
+      console.log(data.toString());
+    });
+  });
+
+program.command('nlp-process')
+  .description('Tell a trained program something.')
+  .argument('<container>', 'data silo')
+  .argument('<language>', 'the language to use')
+  .argument('<run>', 'the text to process')
+  .action((container, language, run, options) => {
+    let cmd = cp.exec(`gulp --gulpfile=./tasks/nlp-process.js --container="${container}"  --language="${language}" --run="${run}"`)
 
     cmd.stdout.on('data', (data) => {
       console.log(data.toString());

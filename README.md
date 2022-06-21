@@ -20,10 +20,14 @@ Usage: network-ai [options] [command]
 CLI to network-ai functionality.
 
 Options:
-  -V, --version   output the version number
-  -h, --help      display help for command
+  -V, --version                                             output the version number
+  -h, --help                                                display help for command
 
 Commands:
-  tasks <string>  Run a gulp task from the tasks folder.
-  help [command]  display help for command
+  tasks <string>                                            Run a gulp task from the tasks folder.
+  nlp-document <container> <language> <utterance> <intent>  Add an utterance and intent for the NLP.
+  nlp-answer <container> <language> <intent> <response>     Add an intent and response for the NLP.
+  nlp-train <container> <language>                          Teach a program how to act using documents and answers.
+  nlp-process <container> <language> <run>                  Tell a trained program something.
+  help [command]                                            display help for command
 ```

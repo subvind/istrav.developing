@@ -24,7 +24,7 @@ let answers = db.addCollection('answers', { indices: ['language', 'intent', 'res
 // complete
 async function saveTraining (name, data) {
   let key = `nlp/trainings/${name}`
-  console.log('save training', key)
+  console.log('save training to', key)
   await writeFile(key, data)
 }
 
