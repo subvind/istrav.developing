@@ -2,7 +2,7 @@
 import gulp from 'gulp';
 const { series, parallel } = gulp;
 
-import Markov from '../js-markov/index.js'
+import Markov from '../lib/markov.js'
 
 // return generated string length
 let order = 100
