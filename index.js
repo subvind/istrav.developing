@@ -21,4 +21,21 @@ program.command('tasks')
     });
   });
 
+program.command('nlp-document')
+  .description('Add an utterance and intent for the NLP.')
+  .argument('<container>', 'data silo')
+  .argument('<language>', 'the language of the utterance')
+  .argument('<utterance>', 'what is being said')
+  .argument('<intent>', 'purpose of utterance')
+  .action((container, language, utterance, intent, options) => {
+    let cmd = cp.exec(`gulp --gulpfile=./tasks/nlp-document.js --container="${container}"`)
+
+    cmd.stdout.on('data', (data) => {
+      console.log(data.toString());
+    });
+    cmd.stderr.on('data', (data) => {
+      console.log(data.toString());
+    });
+  });
+
 program.parse();
