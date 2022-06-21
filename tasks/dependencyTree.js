@@ -49,7 +49,7 @@ async function taskTrees() {
   return true
 }
 
-
+// tasks
 export default series(
   taskLocations,
   taskTrees

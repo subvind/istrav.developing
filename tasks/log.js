@@ -21,6 +21,7 @@ async function deploy () {
   console.log('deploy')
 }
 
+// tasks
 export default series(
   clean,
   parallel(js, css , img),

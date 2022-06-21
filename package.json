@@ -16,7 +16,11 @@
     "js-markov": "^3.0.3"
   },
   "dependencies": {
+    "@nlpjs/core": "^4.23.4",
+    "@nlpjs/lang-en-min": "^4.23.4",
+    "@nlpjs/nlp": "^4.23.5",
     "commander": "^9.3.0",
+    "lokijs": "^1.5.12",
     "yargs": "^17.5.1"
   }
 }

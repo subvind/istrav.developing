@@ -47,6 +47,7 @@ async function log () {
   console.log(response)
 }
 
+// tasks
 export default series(
   train,
   generate,
