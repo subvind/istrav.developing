@@ -4,8 +4,8 @@ const program = new Command();
 import cp  from 'child_process'
 
 program
-  .name('network-ai')
-  .description('CLI to network-ai functionality.')
+  .name('istrav')
+  .description('CLI to istrav functionality.')
   .version('0.0.1');
 
 program.command('tasks')

@@ -8,7 +8,7 @@ import { join } from 'path';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'network-ai'),
+      rootPath: join(__dirname, '..', 'static'),
       exclude: ['/api*'],
     }),
   ],

@@ -1,4 +1,4 @@
-network-ai
+istrav.dev
 ========
 
 rough sketch:
@@ -15,9 +15,9 @@ rough sketch:
 
 ```bash
 # node index.js --help
-Usage: network-ai [options] [command]
+Usage: istrav [options] [command]
 
-CLI to network-ai functionality.
+CLI to istrav functionality.
 
 Options:
   -V, --version                                             output the version number
