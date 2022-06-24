@@ -66,16 +66,23 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect, OnG
     if (first === '>') {
       // remove first > char
       let commandToRun = message.substring(1); // trims first char off the front of the string
-      console.log('my-event:command', container, language, `"${message}"`)
+      commandToRun = commandToRun.replace(/\;/g, ':semicolon:');
+      commandToRun = commandToRun.replace(/\|/g, ':pipe:');
+
+      console.log('my-event:command', container, language, `"${commandToRun}"`)
 
       // run a command:
-      cmd = cp.exec(`node ../index.js ${commandToRun}`)
+      let file = `${__dirname}/../../index.js`
+      console.log('file', file)
+
+      cmd = cp.exec(`node ${file} ${commandToRun}`)
+
       cmd.stdout.on('data', (data) => {
-        // console.log(data.toString());
+        console.log(data.toString());
         this.broadcast('my-event', data.toString());
       });
       cmd.stderr.on('data', (data) => {
-        // console.log(data.toString());
+        console.log(data.toString());
         this.broadcast('my-event', data.toString());
       });
     } else {

@@ -14,6 +14,11 @@ rough sketch:
 10. source code performs rolling updates to github while other machines perform rolling downloads
 
 ```bash
+# so that scripts may run file by child_process.spawn
+$ sudo chmod -R a+rwx ./index.js
+```
+
+```bash
 # node index.js --help
 Usage: istrav [options] [command]
 
