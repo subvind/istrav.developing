@@ -45,7 +45,7 @@ async function processData () {
   
   // process
   const response = await nlp.process(containerLanguage, containerRun);
-  console.log(response.answer);
+  console.log(`~~~${response.answer}`);
 }
 
 // tasks

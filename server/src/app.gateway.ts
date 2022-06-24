@@ -6,7 +6,14 @@ import {
   WsResponse,
   OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 } from '@nestjs/websockets';
+
 import { Server } from 'socket.io';
+import * as cp  from 'child_process'
+
+// text read from the command line needs to be trimmed
+String.prototype.trim = function() {
+  return this.replace(/^\s+|\s+$/g, "");
+};
 
 @WebSocketGateway({
   cors: {
@@ -36,14 +43,67 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect, OnG
   }
 
   private broadcast(event, message: any) {
-    const broadCastMessage = JSON.stringify(message);
+    const broadCastMessage = message;
     for (let c of this.wsClients) {
       c.emit(event, broadCastMessage);
     }
   }
 
+  private logVerbose () {
+
+  }
+
   @SubscribeMessage('my-event')
   onChgEvent(client: any, payload: any) {
-    this.broadcast('my-event', payload);
+    let container: string = payload.container || 'test'
+    let language: string = payload.language || 'en'
+    let message: string = payload.message || '> help'
+    let verbose: string = payload.verbose || false
+    console.log('my-event', container, language, `"${message}"`)
+    
+    let cmd
+    let first = message.toString().charAt(0)
+    // console.log('first', first)
+    if (first === '>') {
+      // remove first > char
+      let commandToRun = message.substring(1); // trims first char off the front of the string
+      // console.log('commandToRun', commandToRun)
+
+      // run a command:
+      cmd = cp.exec(`node ../index.js ${commandToRun}`)
+      cmd.stdout.on('data', (data) => {
+        // console.log(data.toString());
+        this.broadcast('my-event', data.toString());
+      });
+      cmd.stderr.on('data', (data) => {
+        // console.log(data.toString());
+        this.broadcast('my-event', data.toString());
+      });
+    } else {
+      // run default:
+      let utter = message.toString().replace(/"/g, '&quot;');
+      cmd = cp.exec(`node ../index.js nlp-process ${container} ${language} "${utter}"`)
+      cmd.stdout.on('data', (data) => {
+        data = data.toString()
+        if (verbose) {
+          // send all messages back
+          this.broadcast('my-event', data);
+        } else {
+          // only return results prefixed with: ~~~
+          if (
+            data.charAt(0) === '~' &&
+            data.charAt(1) === '~' &&
+            data.charAt(2) === '~'
+          ) {
+            let utterResponse = data.substring(3);
+            this.broadcast('my-event', utterResponse.trim());
+          }
+        }
+      });
+      cmd.stderr.on('data', (data) => {
+        // console.log(data.toString());
+        this.broadcast('my-event', data.toString());
+      });
+    }
   }
 }
