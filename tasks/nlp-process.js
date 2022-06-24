@@ -27,8 +27,8 @@ async function processData () {
   // configuration
   let containerName = argv.container
   let containerLanguage = argv.language
-  let containerRun = argv.run
-  console.log('process data', containerName, `"${containerRun}"`)
+  let containerRun = argv.run.toString().replace(/&quot;/g, '"'); // unescape quotes from running through CLI safely
+  console.log('process data', containerName, `"${argv.run}"`)
 
   // setup nlp
   const container = await containerBootstrap();

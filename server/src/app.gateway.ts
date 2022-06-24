@@ -59,7 +59,6 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect, OnG
     let language: string = payload.language || 'en'
     let message: string = payload.message || '> help'
     let verbose: string = payload.verbose || false
-    console.log('my-event', container, language, `"${message}"`)
     
     let cmd
     let first = message.toString().charAt(0)
@@ -67,7 +66,7 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect, OnG
     if (first === '>') {
       // remove first > char
       let commandToRun = message.substring(1); // trims first char off the front of the string
-      // console.log('commandToRun', commandToRun)
+      console.log('my-event:command', container, language, `"${message}"`)
 
       // run a command:
       cmd = cp.exec(`node ../index.js ${commandToRun}`)
@@ -82,6 +81,8 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect, OnG
     } else {
       // run default:
       let utter = message.toString().replace(/"/g, '&quot;');
+      console.log('my-event:nlp', container, language, `"${utter}"`)
+
       cmd = cp.exec(`node ../index.js nlp-process ${container} ${language} "${utter}"`)
       cmd.stdout.on('data', (data) => {
         data = data.toString()
