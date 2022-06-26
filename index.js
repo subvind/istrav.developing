@@ -12,13 +12,13 @@ const __dirname = path.dirname(__filename);
 import cp  from 'child_process'
 
 program
-  .name('istrav')
-  .description('CLI to istrav functionality.')
+  .name('Network AI')
+  .description('Here are the CLI docs for interacting with our\nlocal servers behind ... https://istrav.dev\n\nNetwork AI:\n- Run a command ... > tasks log\n- Platforms integration ... /community_folder/ Hello there!\n- Direct messaging ... @john: Hello there!\n- Default ... Hello there!')
   .version('0.0.1');
 
 program.command('tasks')
   .description('Run a gulp task from the tasks folder.')
-  .argument('<string>', 'task to call')
+  .argument('<gulpfile>', 'task to call')
   // .option('--first', 'display just the first substring')
   // .option('-s, --separator <char>', 'separator character', ',')
   .action((fileName, options) => {
