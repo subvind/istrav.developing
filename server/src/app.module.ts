@@ -7,10 +7,10 @@ import { join } from 'path';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'static'),
-      exclude: ['/api*'],
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'static'),
+    //   exclude: ['/api*'],
+    // }),
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],
