@@ -5,6 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "module": "es2022",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
