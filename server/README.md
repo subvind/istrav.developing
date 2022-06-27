@@ -8,7 +8,7 @@ $ sudo ufw allow 8888/tcp
 $ sudo ufw reload
 
 # start
-$ PORT=8888 pm2 start server/dist/main.js -i -1 --update-env --name="istrav.dev"
+$ PORT=8888 pm2 start server/dist/main.js -i 1 --update-env --name="istrav.dev"
 
 # stop
 $ pm2 stop server/dist/main.js --name="istrav.dev"
@@ -30,6 +30,9 @@ $ pm2 save
 
 # Remove Startup Script
 $ pm2 unstartup
+
+# after a code change
+$ pm2 reload all
 ```
 
 ## Installation
