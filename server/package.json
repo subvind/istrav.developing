@@ -28,6 +28,7 @@
     "@nestjs/platform-ws": "^8.4.7",
     "@nestjs/serve-static": "^2.2.2",
     "@nestjs/websockets": "^8.4.7",
+    "http-proxy-middleware": "^2.0.6",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
