@@ -24,6 +24,7 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect, OnG
   @WebSocketServer() 
   private server: Server;
 
+  // TODO: back this up to a redis db
   wsClients=[];
   afterInit() {
     this.server.emit('testing', { do: 'stuff' });
@@ -90,7 +91,12 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect, OnG
       let utter = message.toString().replace(/"/g, '&quot;');
       console.log('my-event:nlp', container, language, `"${utter}"`)
 
-      cmd = cp.exec(`node ../index.js nlp-process ${container} ${language} "${utter}"`)
+      // run a command:
+      let file = `${__dirname}/../../index.js`
+      console.log('file', file)
+
+      cmd = cp.exec(`node ${file} nlp-process ${container} ${language} "${utter}"`)
+      
       cmd.stdout.on('data', (data) => {
         data = data.toString()
         if (verbose) {
