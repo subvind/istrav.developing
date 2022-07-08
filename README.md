@@ -20,19 +20,28 @@ $ sudo chmod -R a+rwx ./index.js
 
 ```bash
 # node index.js --help
-Usage: istrav [options] [command]
+Usage: Network AI [options] [command]
 
-CLI to istrav functionality.
+Here are the CLI docs for interacting with our
+local servers behind ... https://istrav.dev
+
+Network AI:
+- Run a command ... > tasks log
+- Platforms integration ... /community_folder/ Hello there!
+- Direct messaging ... @john: Hello there!
+- Default ... Hello there!
 
 Options:
   -V, --version                                             output the version number
   -h, --help                                                display help for command
 
 Commands:
-  tasks <string>                                            Run a gulp task from the tasks folder.
+  tasks <gulpfile>                                          Run a gulp task from the tasks folder.
   nlp-document <container> <language> <utterance> <intent>  Add an utterance and intent for the NLP.
   nlp-answer <container> <language> <intent> <response>     Add an intent and response for the NLP.
   nlp-train <container> <language>                          Teach a program how to act using documents and answers.
   nlp-process <container> <language> <run>                  Tell a trained program something.
+  platform-run <name>                                       Tell PM2 to run a new platform process.
+  platform-stop <name>                                      Tell PM2 to stop a running platform process.
   help [command]                                            display help for command
 ```

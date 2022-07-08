@@ -1,3 +1,8 @@
+#!/usr/bin/env node
+import yargs from 'yargs/yargs'
+import { hideBin } from 'yargs/helpers'
+const argv = yargs(hideBin(process.argv)).argv
+
 // allow require Node >= 14
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
@@ -11,6 +16,10 @@ import pkg from 'ssh2'
 const { Client } = pkg;
 
 async function stop () {
+  // configuration
+  let platformName = argv.name
+  console.log('run platform', platformName)
+
   await new Promise((resolve, reject) => {
     var c = new Client()
     c.on('connect', function() {
@@ -20,8 +29,8 @@ async function stop () {
     c.on('ready', function() {
       console.log('Connection :: ready');
 
-      // PORT=3000 pm2 start dist/main.js --update-env --name="communityfolder"
-      c.exec('echo Hello, World!', { allowHalfOpen: false }, function (error, channel) {
+      // execute
+      c.exec(`cd ~/Projects/istrav-platform-backend && pm2 stop dist/main.js --name="${platformName}"`, { allowHalfOpen: false }, function (error, channel) {
         channel.on('data', (data) => {
           console.log(data.toString());
         });

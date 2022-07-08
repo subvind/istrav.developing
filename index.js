@@ -97,4 +97,47 @@ program.command('nlp-process')
     });
   });
 
+program.command('platform-run')
+  .description('Tell PM2 to run a new platform process.')
+  .argument('<name>', 'reference id')
+  .action((name, options) => {
+    let cmd = cp.exec(`gulp --gulpfile=${__dirname}/tasks/platform-run.js --name="${name}"`)
+
+    cmd.stdout.on('data', (data) => {
+      console.log(data.toString());
+    });
+    cmd.stderr.on('data', (data) => {
+      console.log(data.toString());
+    });
+  });
+
+program.command('platform-stop')
+  .description('Tell PM2 to stop a running platform process.')
+  .argument('<name>', 'reference id')
+  .action((name, options) => {
+    let cmd = cp.exec(`gulp --gulpfile=${__dirname}/tasks/platform-stop.js --name="${name}"`)
+
+    cmd.stdout.on('data', (data) => {
+      console.log(data.toString());
+    });
+    cmd.stderr.on('data', (data) => {
+      console.log(data.toString());
+    });
+  });
+
+program.command('platform-logs')
+  .description('Tell PM2 to show us the latest logs from a platform.')
+  .argument('<name>', 'reference id')
+  .option('--lines', 'number of logs to show', 100)
+  .action((name, options) => {
+    let cmd = cp.exec(`gulp --gulpfile=${__dirname}/tasks/platform-logs.js --name="${name}" --lines="${options.lines}"`)
+
+    cmd.stdout.on('data', (data) => {
+      console.log(data.toString());
+    });
+    cmd.stderr.on('data', (data) => {
+      console.log(data.toString());
+    });
+  });
+
 program.parse();

@@ -7,9 +7,6 @@ const argv = yargs(hideBin(process.argv)).argv
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
-// name to number conversion method
-import { platformNameToPortNumber } from '../lib/platformNameToPortNumber.js'
-
 // workflow
 import gulp from 'gulp';
 const { series, parallel } = gulp;
@@ -18,26 +15,25 @@ const { series, parallel } = gulp;
 import pkg from 'ssh2'
 const { Client } = pkg;
 
-async function run () {
+async function logs () {
   // configuration
   let platformName = argv.name
-  console.log('run platform', platformName)
+  let lines = argv.lines
+  console.log('logs platform', platformName, lines)
 
   await new Promise((resolve, reject) => {
     var c = new Client()
     c.on('connect', function() {
       console.log('Connection :: connect');
-    })
+    });
+    
     c.on('ready', function() {
       console.log('Connection :: ready');
 
-      // convert
-      let port = platformNameToPortNumber(platformName)
-
       // execute
-      c.exec(`cd ~/Projects/istrav-platform-backend && PORT=${port} pm2 start dist/main.js --update-env --name="${platformName}"`, { allowHalfOpen: false }, function (error, channel) {
+      c.exec(`cd ~/Projects/istrav-platform-backend && pm2 logs ${platformName} --lines=${lines}`, { allowHalfOpen: false }, function (error, channel) {
         channel.on('data', (data) => {
-          console.log(data.toString());
+          console.log(`~~~${data.toString()}`);
         });
         channel.on('close', (data) => {
           c.end()
@@ -65,5 +61,5 @@ async function run () {
 
 // tasks
 export default series(
-  run
+  logs
 )
