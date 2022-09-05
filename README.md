@@ -1,18 +1,25 @@
 istrav.dev
 ========
+Innovation Management Software (IMS)
 
-rough sketch:
-1. Raft consensus between multiple node.js threads
-2. markov chain tries to predict the next command that you want to run
-3. commands are queued into a folder from the CLI
-4. CLI over REST is available for websites and machine to machine communication
-5. gulp watches for commands: assigns it to a exec thread with a task to perform
-6. gulp watches for ideas: assigns it to a release for the next version of code to be deployed
-7. we innovate by writing test cases around the CRUD of our ideas
-8. NLP.js is trained to turn test cases into task code
-9. geneticjs evolves task's code over time in order to optimize for speed and functionality
-10. source code performs rolling updates to github while other machines perform rolling downloads
+istrav source code:
+- istrav.com: https://github.com/trabur/istrav.com
+- trabur.workers.dev: https://github.com/trabur/istrav-global
+- istrav.net: https://github.com/trabur/istrav-platform-frontgate
+- meta.istrav.net: https://github.com/trabur/istrav-platform-frontend
+- istrav.istrav.dev: https://github.com/trabur/istrav-platform-backend
+- istrav-load-balanacer: https://github.com/trabur/istrav-load-balanacer
+- istrav.dev: https://github.com/trabur/istrav.dev
+- istrav-headquarters: https://github.com/trabur/istrav-headquarters
+- istrav.stream: https://github.com/trabur/istrav.stream
 
+istrav.dev tech:
+- NestJS
+- nlpjs
+- gulp
+- commander
+
+### start
 ```bash
 # so that scripts may run file by child_process.spawn
 $ sudo chmod -R a+rwx ./index.js
